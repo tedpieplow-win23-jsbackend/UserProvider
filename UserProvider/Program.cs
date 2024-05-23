@@ -16,9 +16,9 @@ var host = new HostBuilder()
         services.AddScoped<UserService>();
         services.AddScoped<UserFactory>();
 
-        services.AddDbContext<DataContext>(x => x.UseSqlServer(context.Configuration.GetConnectionString("Database")));
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
+        services.AddDbContext<DataContext>(x => x.UseSqlServer(context.Configuration.GetConnectionString("Database")));
     })
     .Build();
 

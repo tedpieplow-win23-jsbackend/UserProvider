@@ -31,11 +31,14 @@ public class UserService(UserFactory userFactory, ILogger<UserService> logger, U
             return ResponseFactory.Error(ex.Message);
         }
     }
-    public async Task<ResponseResult> UpdateUserAsync(AspNetUser user)
+    public async Task<ResponseResult> UpdateUserAsync(UpdateModel model)
     {
         try
         {
-            var updateResult = await _repo.UpdateAsync(x => x.Id == user.Id, user);
+            var getResult = await _repo.GetAsync(x => x.Email == model.Email);
+            var entityToUpdate = (AspNetUser)getResult.ContentResult!;
+            entityToUpdate = _userFactory.PopulateUserEntity(entityToUpdate, model);
+            var updateResult = await _repo.UpdateAsync(x => x.Id == model.Id, entityToUpdate);
             if (updateResult.StatusCode == StatusCode.OK)
                 return ResponseFactory.Ok((AspNetUser)updateResult.ContentResult!);
             else if(updateResult.StatusCode == StatusCode.NOT_FOUND)
@@ -103,6 +106,13 @@ public class UserService(UserFactory userFactory, ILogger<UserService> logger, U
         var userEntity = _userFactory.PopulateUserEntity(body);
         if (userEntity != null)
             return ResponseFactory.Ok(userEntity);
+        return ResponseFactory.Error();
+    }
+    public ResponseResult UpdateBodyChecker(string body)
+    {
+        var updateModel = _userFactory.PopulateUpdateModel(body);
+        if(updateModel != null)
+            return ResponseFactory.Ok(updateModel);
         return ResponseFactory.Error();
     }
 }

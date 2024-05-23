@@ -21,10 +21,10 @@ namespace UserProvider.Functions
                 var body = await new StreamReader(req.Body).ReadToEndAsync();
                 if(body != null)
                 {
-                    var entityResult = _userService.BodyChecker(body);
-                    if(entityResult.StatusCode == StatusCode.OK) 
+                    var modelResult = _userService.UpdateBodyChecker(body);
+                    if(modelResult.StatusCode == StatusCode.OK) 
                     {
-                        var updateResult = await _userService.UpdateUserAsync((AspNetUser)entityResult.ContentResult!);
+                        var updateResult = await _userService.UpdateUserAsync((UpdateModel)modelResult.ContentResult!);
                         if (updateResult.StatusCode == StatusCode.OK)
                             return new OkObjectResult((AspNetUser)updateResult.ContentResult!);
                         else if (updateResult.StatusCode == StatusCode.NOT_FOUND)
