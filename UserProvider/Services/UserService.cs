@@ -35,7 +35,7 @@ public class UserService(UserFactory userFactory, ILogger<UserService> logger, U
     {
         try
         {
-            var getResult = await _repo.GetAsync(x => x.Email == model.Email);
+            var getResult = await _repo.GetAsync(x => x.Id == model.Id);
             var entityToUpdate = (AspNetUser)getResult.ContentResult!;
             entityToUpdate = _userFactory.PopulateUserEntity(entityToUpdate, model);
             var updateResult = await _repo.UpdateAsync(x => x.Id == model.Id, entityToUpdate);

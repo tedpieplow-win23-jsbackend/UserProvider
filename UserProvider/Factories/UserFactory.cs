@@ -16,6 +16,8 @@ public class UserFactory
         entity.LastName = model.LastName;
         entity.Email = model.Email;
         entity.UserName = model.Email;
+        entity.NormalizedEmail = model.Email.ToUpper();
+        entity.NormalizedUserName = model.Email.ToUpper();
         return entity;
     }
     public UpdateModel PopulateUpdateModel(string body)
